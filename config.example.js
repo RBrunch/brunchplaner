@@ -1,0 +1,4 @@
+window.BRUNCHPLANER_CONFIG = {
+  supabaseUrl: 'DEIN-SUPABASE-PROJEKT-URL',
+  supabasePublishableKey: 'DEIN-SUPABASE-PUBLISHABLE-KEY'
+};
