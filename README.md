@@ -19,8 +19,5 @@ Der Button **Datensicherung** exportiert in v1.0 den gesamten aktuell geladenen 
 Das GitHub-Repository ist mit dem bestehenden Vercel-Projekt verbunden. Ein Commit auf den produktiven Branch löst automatisch ein neues Vercel-Deployment aus; die bestehende Domain und die Daten in Supabase bleiben erhalten.
 
 
-## Backup & Wiederherstellung
-
-In der Übersicht stehen jetzt **Datensicherung herunterladen** und **Datensicherung wiederherstellen** zur Verfügung. Der Export liest den Datenbestand frisch aus Supabase. Die Wiederherstellung ersetzt den aktuellen Datenbestand vollständig, verlangt eine Bestätigung und läuft serverseitig in einer Transaktion.
-
-Vor der ersten Verwendung der Wiederherstellung muss `supabase_migration_backup_restore.sql` **einmalig** im Supabase SQL Editor ausgeführt werden. Diese Migration legt nur die Wiederherstellungsfunktion an und verändert beim Einrichten keine bestehenden BrunchPlaner-Daten.
+## Version 1.0.1
+Korrektur: Datensicherung wurde additiv in die bestehende Übersicht integriert. Navigation, Planungsrunden und alle bisherigen Funktionen bleiben unverändert. Die Supabase-Migration muss nicht erneut ausgeführt werden, wenn sie bereits erfolgreich installiert wurde.
