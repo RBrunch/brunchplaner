@@ -44,7 +44,7 @@
 </style>
 </head>
 <body>
-<header><div><h1>🥐 BrunchPlaner</h1><small><span class="version">Version 0.4.1</span> · <span id="headerStatus">Entwurf</span></small></div><div id="adminHeaderActions"><button id="demoResetBtn" onclick="resetDemo()">Demo zurücksetzen</button><button id="logoutBtn" style="display:none" onclick="cloudLogout()">Abmelden</button></div></header>
+<header><div><h1>🥐 BrunchPlaner</h1><small><span class="version">Version 1.0</span> · <span id="headerStatus">Entwurf</span></small></div><div id="adminHeaderActions"><button id="logoutBtn" style="display:none" onclick="cloudLogout()">Abmelden</button></div></header>
 <div class="roundbar"><label for="roundSelect">Planungsrunde:</label><select id="roundSelect" onchange="switchRound(this.value)"></select><button onclick="createRound()">+ Neue Planungsrunde</button><span id="roundMeta" class="round-meta"></span></div>
 <nav id="nav"></nav>
 <main>
@@ -77,7 +77,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="config.js"></script>
 <script>
-const VERSION='0.4.2';
+const VERSION='1.0';
 const KEY='brunchplaner_v04_local_fallback';
 const roles=[['c1','☕ Kaffee #1 – Chef'],['c2','☕ Kaffee #2 – Helfer'],['b1','🥐 Brunch #1'],['b2','🥐 Brunch #2'],['bread','🥖 Zopf & Brot'],['cheese','🧀 Käseplatte'],['muesli','🥣 Birchermüesli']];
 let selected='c1';
@@ -86,7 +86,7 @@ const participantMode=!!participantToken;
 const CLOUD_CONFIG=window.BRUNCHPLANER_CONFIG||{};
 const cloudEnabled=!!(CLOUD_CONFIG.supabaseUrl&&CLOUD_CONFIG.supabasePublishableKey&&!String(CLOUD_CONFIG.supabaseUrl).includes('DEIN-'));
 let sb=null;
-let data=defaultData();
+let data={people:[],rounds:[],activeRoundId:null};
 let state=getActiveRound();
 let participantRound=null;
 let cloudSaveTimer=null;
@@ -95,24 +95,16 @@ let cloudPending=false;
 if(cloudEnabled){sb=window.supabase.createClient(CLOUD_CONFIG.supabaseUrl,CLOUD_CONFIG.supabasePublishableKey)}
 function el(id){return document.getElementById(id)}
 function uid(){return Math.random().toString(36).slice(2,9)+Date.now().toString(36)}
-function defaultPeople(){let names=['Anna','Ben','Claudia','David','Elena','Fabian','Gabi','Hannes','Isabelle','Jonas'];return names.map((name,i)=>({id:'p'+i,name,email:name.toLowerCase()+'@beispiel.ch',mobile:'+41 79 000 00 '+String(10+i),active:true}))}
 function blankAssignments(){let a={};roles.forEach(r=>a[r[0]]={});return a}
-function demoRound(people){let dates=['2026-10-04','2026-10-11','2026-10-18','2026-10-25','2026-11-01','2026-11-08','2026-11-15','2026-11-22','2026-11-29'];let avail={};people.forEach((p,i)=>{avail[p.id]={};dates.forEach((d,j)=>avail[p.id][d]=((i+j)%5===0?'no':((i+j)%3===0?'maybe':'yes')))});return{id:'round-oct-nov-2026',title:'Brunch-Einteilung Oktober / November 2026',dates,avail,assignments:blankAssignments(),published:false,linkToken:'okt-nov-2026',createdAt:'2026-09-05T00:00:00.000Z'}}
-function normalizeRound(r,people){r=r||{};r.id=r.id||('round-'+uid());r.title=r.title||'Neue Brunch-Einteilung';r.dates=Array.isArray(r.dates)?r.dates:[];r.avail=r.avail||{};r.availabilityCompleted=r.availabilityCompleted||{};r.assignments=r.assignments||{};r.createdAt=r.createdAt||new Date().toISOString();roles.forEach(x=>r.assignments[x[0]]=r.assignments[x[0]]||{});people.forEach(p=>{r.avail[p.id]=r.avail[p.id]||{};if(r.availabilityCompleted[p.id]===undefined){r.availabilityCompleted[p.id]=!!r.published||r.id==='round-oct-nov-2026'}});return r}
-function defaultData(){let people=defaultPeople();let round=demoRound(people);return{people,rounds:[round],activeRoundId:round.id}}
-function loadData(){try{let raw=JSON.parse(localStorage.getItem(KEY));if(!raw)return defaultData();if(Array.isArray(raw.rounds)){raw.people=Array.isArray(raw.people)?raw.people:defaultPeople();raw.rounds=raw.rounds.map(r=>normalizeRound(r,raw.people));raw.activeRoundId=raw.rounds.some(r=>r.id===raw.activeRoundId)?raw.activeRoundId:raw.rounds[0]?.id;return raw}let people=Array.isArray(raw.people)?raw.people:defaultPeople();let migrated=normalizeRound({id:'round-migrated',title:raw.title,dates:raw.dates,avail:raw.avail,assignments:raw.assignments,published:raw.published,linkToken:raw.linkToken,createdAt:new Date().toISOString()},people);return{people,rounds:[migrated],activeRoundId:migrated.id}}catch(e){return defaultData()}}
+function normalizeRound(r,people){r=r||{};r.id=r.id||('round-'+uid());r.title=r.title||'Neue Brunch-Einteilung';r.dates=Array.isArray(r.dates)?r.dates:[];r.avail=r.avail||{};r.availabilityCompleted=r.availabilityCompleted||{};r.assignments=r.assignments||{};r.createdAt=r.createdAt||new Date().toISOString();roles.forEach(x=>r.assignments[x[0]]=r.assignments[x[0]]||{});people.forEach(p=>{r.avail[p.id]=r.avail[p.id]||{};if(r.availabilityCompleted[p.id]===undefined){r.availabilityCompleted[p.id]=!!r.published}});return r}
 function getActiveRound(){let r=data.rounds.find(x=>x.id===data.activeRoundId)||data.rounds[0];if(!r){r=normalizeRound({title:'Neue Brunch-Einteilung'},data.people);data.rounds.push(r);data.activeRoundId=r.id}r.people=data.people;return r}
-function persistLocal(){data.people=state.people;localStorage.setItem(KEY,JSON.stringify(data));updateHeader();renderRoundSwitcher()}
 function stripAvailabilityForCloud(source){let copy=JSON.parse(JSON.stringify(source));(copy.rounds||[]).forEach(r=>{delete r.avail;delete r.availabilityCompleted;delete r.people});return copy}
 function isJwtFutureError(error){let m=String(error?.message||error||'').toLowerCase();return m.includes('jwt issued at future')||m.includes('pgrst303')}
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
 async function cloudRpc(name,args,attempts=3){let result;for(let i=0;i<attempts;i++){result=await sb.rpc(name,args);if(!result.error||!isJwtFutureError(result.error))return result;if(i<attempts-1)await wait(1200*(i+1))}return result}
 async function saveCloudState(){if(!cloudEnabled||participantMode)return;if(cloudSaving){cloudPending=true;return}cloudSaving=true;try{let payload=stripAvailabilityForCloud(data);let {error}=await cloudRpc('brunch_admin_save_state',{p_data:payload});if(error)throw error}catch(e){console.error(e);alert('Speichern in der Online-Datenbank fehlgeschlagen: '+e.message)}finally{cloudSaving=false;if(cloudPending){cloudPending=false;saveCloudState()}}}
-function persist(){data.people=state.people;if(cloudEnabled){updateHeader();renderRoundSwitcher();clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(saveCloudState,120)}else{persistLocal()}}
+function persist(){data.people=state.people;if(!cloudEnabled)return;updateHeader();renderRoundSwitcher();clearTimeout(cloudSaveTimer);cloudSaveTimer=setTimeout(saveCloudState,120)}
 function save(){persist()}
-function syncFromOtherTab(event){if(cloudEnabled||event.key!==KEY||!event.newValue)return;try{data=loadData();state=getActiveRound();renderAll()}catch(e){console.warn('Tab-Synchronisation fehlgeschlagen',e)}}
-window.addEventListener('storage',syncFromOtherTab);
-async function resetDemo(){if(cloudEnabled){alert('Der Demo-Reset ist in der Online-Version deaktiviert.');return}if(confirm('Demo-Daten wirklich zurücksetzen?')){data=defaultData();state=getActiveRound();persistLocal();renderAll()}}
 function renderRoundSwitcher(){let sel=el('roundSelect');if(!sel)return;let sorted=[...data.rounds].sort((a,b)=>(b.createdAt||'').localeCompare(a.createdAt||''));sel.innerHTML=sorted.map(r=>`<option value="${r.id}" ${r.id===data.activeRoundId?'selected':''}>${r.title}${r.published?' · veröffentlicht':' · Entwurf'}</option>`).join('');let current=data.rounds.find(r=>r.id===data.activeRoundId);el('roundMeta').textContent=current?(current.dates.length+' Sonntage'):''}
 function switchRound(id){if(!data.rounds.some(r=>r.id===id))return;data.activeRoundId=id;state=getActiveRound();persist();renderAll()}
 function monthName(m){return ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'][m]}
@@ -153,7 +145,7 @@ function renderMine(){let sel=el('mine'),keep=sel.value;sel.innerHTML=state.peop
 function downloadICS(pid,d,rid){let r=roles.find(x=>x[0]===rid);let times={c1:['0815','1200'],c2:['0930','1200'],b1:['0815','1200'],b2:['0815','1200'],bread:['0915',null],cheese:['0915',null],muesli:['0915',null]};let [startTime,endTime]=times[rid]||['0930','1200'];let y=d.slice(0,4),m=d.slice(5,7),day=d.slice(8,10);let endLine=endTime?`DTEND:${y}${m}${day}T${endTime}00\r\n`:'';let text=`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//BrunchPlaner//DE\r\nBEGIN:VEVENT\r\nUID:${uid()}@brunchplaner\r\nDTSTAMP:${new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'')}\r\nDTSTART:${y}${m}${day}T${startTime}00\r\n${endLine}SUMMARY:${escapeICS(r[1])}\r\nDESCRIPTION:BrunchPlaner – ${escapeICS(r[1])}\r\nEND:VEVENT\r\nEND:VCALENDAR`;let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type:'text/calendar;charset=utf-8'}));a.download='BrunchPlaner-'+d+'-'+rid+'.ics';a.click()}
 function escapeICS(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n')}
 function exportCSV(){let rows=[['Sonntag','Kaffee #1 – Chef','Kaffee #2 – Helfer','Brunch #1','Brunch #2','Zopf & Brot','Käseplatte','Birchermüesli']];state.dates.forEach(d=>rows.push([fmtDate(d),...roles.map(r=>state.people.find(p=>p.id===state.assignments[r[0]][d])?.name||'')]));let csv='\\ufeff'+rows.map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(';')).join('\r\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));a.download='BrunchPlaner-Einsatzplan.csv';a.click()}
-function exportJSON(){let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:'application/json'}));a.download='BrunchPlaner-Datensicherung.json';a.click()}
+function exportJSON(){let stamp=new Date().toISOString().slice(0,10);let backup=JSON.parse(JSON.stringify(data));let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}));a.download='BrunchPlaner-Datensicherung-'+stamp+'.json';a.click()}
 function publishPlan(){state.published=true;save();renderFull();renderDashboard();alert(cloudEnabled?'Der Plan ist veröffentlicht und für die Teilnehmer online sichtbar.':'Der Plan ist jetzt als veröffentlicht markiert.')}
 function unpublishPlan(){state.published=false;save();renderFull();renderDashboard()}
 function renderParticipantPublic(){
@@ -177,9 +169,9 @@ function showCloudLogin(msg=''){document.querySelectorAll('.view').forEach(x=>x.
 async function cloudLogin(){let email=el('loginEmail').value.trim(),password=el('loginPassword').value;if(!email||!password){el('loginMessage').innerHTML='<div class="cloud-error">Bitte E-Mail und Passwort eingeben.</div>';return}el('loginMessage').innerHTML='<div class="muted">Anmeldung…</div>';let {error}=await sb.auth.signInWithPassword({email,password});if(error){el('loginMessage').innerHTML='<div class="cloud-error">'+error.message+'</div>';return}await loadAdminCloud()}
 async function cloudLogout(){await sb.auth.signOut();location.reload()}
 function mergeAvailabilityRows(rows){(data.rounds||[]).forEach(r=>{r.avail={};r.availabilityCompleted={};(data.people||[]).forEach(p=>r.avail[p.id]={})});for(let row of (rows||[])){let r=data.rounds.find(x=>x.id===row.round_id);if(!r)continue;r.avail[row.person_id]=r.avail[row.person_id]||{};r.avail[row.person_id][row.date]=row.status}for(let r of data.rounds){for(let p of data.people||[]){let cnt=r.dates.filter(d=>['yes','maybe','no'].includes(r.avail[p.id]?.[d])).length;r.availabilityCompleted[p.id]=r.dates.length>0&&cnt===r.dates.length}}}
-async function loadAdminCloud(){let {data:sessionData}=await sb.auth.getSession();if(!sessionData.session){showCloudLogin();return}let [s,a]=await Promise.all([cloudRpc('brunch_admin_get_state'),cloudRpc('brunch_admin_get_availability')]);if(s.error){showCloudLogin(s.error.message);return}if(a.error){showCloudLogin(a.error.message);return}data=s.data||{people:[],rounds:[],activeRoundId:null};data.people=Array.isArray(data.people)?data.people:[];data.rounds=Array.isArray(data.rounds)?data.rounds.map(r=>normalizeRound(r,data.people)):[];mergeAvailabilityRows(a.data||[]);state=getActiveRound();document.querySelector('.roundbar').style.display='flex';el('demoResetBtn').style.display='none';el('logoutBtn').style.display='inline-block';renderAll()}
+async function loadAdminCloud(){let {data:sessionData}=await sb.auth.getSession();if(!sessionData.session){showCloudLogin();return}let [s,a]=await Promise.all([cloudRpc('brunch_admin_get_state'),cloudRpc('brunch_admin_get_availability')]);if(s.error){showCloudLogin(s.error.message);return}if(a.error){showCloudLogin(a.error.message);return}data=s.data||{people:[],rounds:[],activeRoundId:null};data.people=Array.isArray(data.people)?data.people:[];data.rounds=Array.isArray(data.rounds)?data.rounds.map(r=>normalizeRound(r,data.people)):[];mergeAvailabilityRows(a.data||[]);state=getActiveRound();document.querySelector('.roundbar').style.display='flex';el('logoutBtn').style.display='inline-block';renderAll()}
 async function loadParticipantCloud(){let {data:pub,error}=await cloudRpc('brunch_participant_get_round',{p_token:participantToken});if(error||!pub){participantRound=null;state=normalizeRound({title:'Ungültiger Link',dates:[]},[]);state.people=[];renderParticipantPublic();return}data={people:pub.people||[],rounds:[normalizeRound(pub.round,pub.people||[])],activeRoundId:pub.round.id};participantRound=data.rounds[0];state=participantRound;state.people=data.people;renderParticipantPublic()}
-async function boot(){if(!cloudEnabled){data=loadData();state=getActiveRound();participantRound=participantToken?data.rounds.find(r=>r.linkToken===participantToken):null;if(participantRound){state=participantRound;state.people=data.people}renderAll();return}if(participantMode){await loadParticipantCloud()}else{await loadAdminCloud()}}
+async function boot(){if(!cloudEnabled){document.body.innerHTML='<main style="max-width:760px;margin:60px auto;padding:24px;font-family:system-ui"><div class="card"><h2>BrunchPlaner ist nicht konfiguriert</h2><p>Die Supabase-Konfiguration fehlt oder ist ungültig. In der Produktivversion werden bewusst keine lokalen Demo-Daten verwendet.</p></div></main>';return}if(participantMode){await loadParticipantCloud()}else{await loadAdminCloud()}}
 boot();
 </script>
 </body></html>
