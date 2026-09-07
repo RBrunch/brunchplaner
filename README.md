@@ -1,18 +1,11 @@
-# BrunchPlaner v1.2 – Produktivversion
+# BrunchPlaner v1.2.1
 
-Diese Version basiert auf der funktionierenden Produktivversion v1.1 und ergänzt ausschliesslich die getestete Kommentarfunktion pro Sonntag.
+Reiner Bugfix auf Basis von v1.2.
 
-Neu in v1.2:
-- Pro Sonntag ein kompaktes Kommentarfeld im Tab **Einsatzplanung** (max. 120 Zeichen).
-- Zeilenumbrüche werden gespeichert und angezeigt.
-- Kommentare erscheinen im Tab **Kompletter Plan** in einer eigenen untersten Zeile.
-- Kommentare erscheinen im veröffentlichten Teilnehmer-Dienstplan ebenfalls in einer eigenen untersten Zeile und dort linksbündig.
-- Die Personen-/Dienstzeilen im Teilnehmerplan bleiben unverändert zentriert.
-- Mobile Darstellung bleibt kompakt.
-- Bestehende Personen, Planungsrunden, Verfügbarkeiten und Einteilungen bleiben erhalten.
-- Keine Supabase-Migration erforderlich; Kommentare werden im bestehenden Planungsrunden-JSON gespeichert.
+Änderungen:
+- Einsatzplanung wird wieder vollständig angezeigt. Ursache war eine fehlende interne HTML-Escaping-Funktion beim Rendern der neuen Kommentarfelder.
+- Erste Spalte im Tab „Kompletter Plan“ verbreitert, damit längere Dienstnamen wie „Brunch #3 – Helfer“ einzeilig bleiben.
+- Keine Änderung an Supabase-Schema oder bestehenden Daten.
+- Alle Funktionen aus v1.2 bleiben erhalten, inklusive Sonntags-Kommentaren, Brunch #3, Drag-and-drop-Reihenfolge und Datensicherung.
 
-Zusätzlich wurde die Kalenderzeit für den bereits in v1.1 eingeführten Dienst **Brunch #3 – Helfer** auf 08:15–12:00 vervollständigt.
-
-## Update
-Vor dem Update eine aktuelle Datensicherung herunterladen. Danach `index.html`, `config.js` und `README.md` im GitHub-Repository ersetzen. Vercel deployt anschliessend automatisch.
+Installation: index.html, config.js und README.md im GitHub-Repository ersetzen. Keine SQL-Migration erforderlich.
