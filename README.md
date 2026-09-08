@@ -1,17 +1,11 @@
-# BrunchPlaner v1.3 – Produktivversion
+# BrunchPlaner v1.3.1
 
-Basis: funktionierende Produktivversion v1.2.2.
+Produktiver Layout-Bugfix auf Basis von v1.3.
 
-## Neu in v1.3
-- Neuer Dienst **☕ Kaffee #3 – Schnuppern**
-- Der Dienst ist analog zu den bestehenden Diensten vollständig in Einsatzplanung, komplettem Plan und Teilnehmeransicht integriert.
-- Einsatzzeit für **Kaffee #3 – Schnuppern: 08:15–12:00 Uhr**, identisch mit Kaffee #1 – Chef, damit Schnuppernde auch die Vorbereitung miterleben.
-- Kalenderübernahme (ICS) verwendet ebenfalls 08:15–12:00 Uhr.
-- CSV-Export nimmt alle aktuell vorhandenen Dienste vollständig mit auf.
+Änderungen:
+- Erste Spalte der Teilnehmer-Gesamtübersicht verbreitert.
+- Dienstbezeichnungen in der Smartphone-/Vollbildansicht minimal kleiner dargestellt.
+- „Kaffee #3 – Schnuppern“ bleibt dadurch vollständig in der Dienstspalte und kollidiert nicht mit Personennamen.
+- Personennamen und übrige Tabelleninhalte bleiben unverändert.
 
-## Daten / Supabase
-- Keine neue Supabase-Migration erforderlich.
-- Bestehende Personen, Verfügbarkeiten, Kommentare, Zuteilungen und Planungsrunden bleiben erhalten.
-- Der neue Dienst ist in bestehenden Planungsrunden zunächst leer und kann danach normal zugeteilt werden.
-
-Vor dem Deployment wird wie gewohnt eine aktuelle Datensicherung empfohlen.
+Keine Supabase-Migration erforderlich. Bestehende Daten und Einteilungen werden nicht verändert.
