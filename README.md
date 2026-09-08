@@ -1,15 +1,15 @@
-# BrunchPlaner v1.3.4
+# BrunchPlaner v1.3.5
 
-Produktiver Layout-Fix auf Basis von v1.3.3.
+Produktiver Layout-Fix auf Basis von v1.3.4.
 
 Änderungen:
-- Teilnehmer-Gesamtplan im Smartphone-Hochformat wird nicht mehr auf die Bildschirmbreite zusammengedrückt.
-- In der normalen Teilnehmeransicht kann durch die Sonntage horizontal gewischt werden.
-- Die Dienstspalte bleibt dabei links fixiert.
-- Dasselbe Verhalten gilt für die vergrösserte Ansicht im Hochformat.
-- Im Querformat bleibt die bisherige kompakte Gesamtansicht erhalten.
-- Kommentare verwenden nur noch die bewusst eingegebenen Zeilenumbrüche; kurze Hinweise wie „- kein Birchermüesli“ brechen dadurch im Querformat nicht mehr unnötig um.
-- Kommentare bleiben linksbündig, klein und oben ausgerichtet.
-- Versionsanzeige auf 1.3.4 aktualisiert.
+- Teilnehmeransicht im Smartphone-Hochformat: Dienstspalte wieder kompakter (145 px statt 180 px), horizontales Wischen bleibt erhalten.
+- Dasselbe kompaktere Verhalten gilt für die vergrösserte Hochformat-Ansicht.
+- Querformat bleibt unverändert übersichtlich.
+- Kommentartexte umbrechen nicht mehr automatisch innerhalb einer einzelnen Kommentarzeile; bewusst eingegebene Zeilenumbrüche bleiben erhalten.
+- Im Tab Einsatzplanung sind die Kommentarfelder auf `wrap=off` gestellt, damit kurze Kommentare wie „- kein Birchermüesli“ nicht nur wegen der Feldbreite optisch umbrechen.
+- Im Tab Kompletter Plan ist die Kommentarschrift minimal kleiner und automatische Zeilenumbrüche sind deaktiviert.
+- Teilnehmeransicht und Vollbildansicht übernehmen ebenfalls nur bewusst eingegebene Zeilenumbrüche.
+- Versionsanzeige auf 1.3.5 aktualisiert.
 
-Keine Supabase-Migration erforderlich. Bestehende Daten und Einteilungen werden nicht verändert.
+Keine Supabase-Migration erforderlich. Bestehende Daten, Personen und Einteilungen werden nicht verändert.
