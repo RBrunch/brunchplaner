@@ -12,3 +12,10 @@ Produktiver Layout-Bugfix auf Basis von v1.3.1.
 - Kommentare bleiben linksbündig und Zeilenumbrüche werden weiterhin übernommen.
 
 Keine Supabase-Migration erforderlich. Bestehende Daten und Einteilungen werden nicht verändert.
+
+
+## Version 1.3.3
+- Teilnehmer-Vollbildplan im Hochformat: lesbare Spaltenbreiten statt Zusammendrücken.
+- Horizontales Wischen durch die Sonntage; Dienstspalte bleibt links fixiert.
+- Querformatdarstellung bleibt unverändert kompakt.
+- Kommentare bleiben klein, linksbündig und oben ausgerichtet.
