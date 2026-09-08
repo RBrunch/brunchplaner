@@ -1,17 +1,17 @@
-# BrunchPlaner v1.2.2 – Produktivversion
+# BrunchPlaner v1.3 – Produktivversion
 
-Basis: funktionierende Produktivversion v1.2.1.
+Basis: funktionierende Produktivversion v1.2.2.
 
-## Änderungen
-- Teilnehmer-Einsatzplan auf Smartphones kompakter dargestellt.
-- Personennamen in der kompakten Tabelle werden nach Möglichkeit einzeilig angezeigt.
-- Kommentarzeile kleiner/feiner und weiterhin linksbündig; Zeilenumbrüche bleiben erhalten.
-- Teilnehmer können den kompletten Einsatzplan über „Tabelle vergrössern“ bzw. Antippen in einer bildschirmfüllenden Ansicht öffnen.
-- In der vergrösserten Ansicht kann horizontal/vertikal gescrollt werden; Querformat nutzt die zusätzliche Breite.
-- Im Admin-Tab „Kompletter Plan“ werden Namen etwas kompakter dargestellt.
+## Neu in v1.3
+- Neuer Dienst **☕ Kaffee #3 – Schnuppern**
+- Der Dienst ist analog zu den bestehenden Diensten vollständig in Einsatzplanung, komplettem Plan und Teilnehmeransicht integriert.
+- Einsatzzeit für **Kaffee #3 – Schnuppern: 08:15–12:00 Uhr**, identisch mit Kaffee #1 – Chef, damit Schnuppernde auch die Vorbereitung miterleben.
+- Kalenderübernahme (ICS) verwendet ebenfalls 08:15–12:00 Uhr.
+- CSV-Export nimmt alle aktuell vorhandenen Dienste vollständig mit auf.
 
-## Datenbank
-Keine Supabase-Migration erforderlich. Bestehende Personen, Planungsrunden, Verfügbarkeiten, Kommentare und Zuteilungen bleiben unverändert.
+## Daten / Supabase
+- Keine neue Supabase-Migration erforderlich.
+- Bestehende Personen, Verfügbarkeiten, Kommentare, Zuteilungen und Planungsrunden bleiben erhalten.
+- Der neue Dienst ist in bestehenden Planungsrunden zunächst leer und kann danach normal zugeteilt werden.
 
-## Deployment
-Vor dem Update Datensicherung herunterladen. Danach `index.html`, `config.js` und `README.md` im GitHub-Repository ersetzen. Vercel deployt automatisch.
+Vor dem Deployment wird wie gewohnt eine aktuelle Datensicherung empfohlen.
