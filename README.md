@@ -1,4 +1,4 @@
-# BrunchPlaner v1.3.5
+# BrunchPlaner v1.3.6
 
 Produktiver Layout-Fix auf Basis von v1.3.4.
 
@@ -10,6 +10,12 @@ Produktiver Layout-Fix auf Basis von v1.3.4.
 - Im Tab Einsatzplanung sind die Kommentarfelder auf `wrap=off` gestellt, damit kurze Kommentare wie „- kein Birchermüesli“ nicht nur wegen der Feldbreite optisch umbrechen.
 - Im Tab Kompletter Plan ist die Kommentarschrift minimal kleiner und automatische Zeilenumbrüche sind deaktiviert.
 - Teilnehmeransicht und Vollbildansicht übernehmen ebenfalls nur bewusst eingegebene Zeilenumbrüche.
-- Versionsanzeige auf 1.3.5 aktualisiert.
+- Versionsanzeige auf 1.3.6 aktualisiert.
 
 Keine Supabase-Migration erforderlich. Bestehende Daten, Personen und Einteilungen werden nicht verändert.
+
+
+## v1.3.6
+- Nur Hochformat der Teilnehmeransicht angepasst.
+- Fixe Dienstspalte von 145 px auf 125 px verschmälert (normal und vergrössert).
+- Mehr Platz für die Sonntagsspalten; Querformat und Admin-Ansichten unverändert.
