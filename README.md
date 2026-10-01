@@ -1,21 +1,16 @@
-# BrunchPlaner v1.3.6
+# BrunchPlaner v1.4.0
 
-Produktiver Layout-Fix auf Basis von v1.3.4.
+Produktivversion auf Basis von v1.3.6.
 
-Änderungen:
-- Teilnehmeransicht im Smartphone-Hochformat: Dienstspalte wieder kompakter (145 px statt 180 px), horizontales Wischen bleibt erhalten.
-- Dasselbe kompaktere Verhalten gilt für die vergrösserte Hochformat-Ansicht.
-- Querformat bleibt unverändert übersichtlich.
-- Kommentartexte umbrechen nicht mehr automatisch innerhalb einer einzelnen Kommentarzeile; bewusst eingegebene Zeilenumbrüche bleiben erhalten.
-- Im Tab Einsatzplanung sind die Kommentarfelder auf `wrap=off` gestellt, damit kurze Kommentare wie „- kein Birchermüesli“ nicht nur wegen der Feldbreite optisch umbrechen.
-- Im Tab Kompletter Plan ist die Kommentarschrift minimal kleiner und automatische Zeilenumbrüche sind deaktiviert.
-- Teilnehmeransicht und Vollbildansicht übernehmen ebenfalls nur bewusst eingegebene Zeilenumbrüche.
-- Versionsanzeige auf 1.3.6 aktualisiert.
+## Neu in v1.4.0
+- Planungsrunden speichern ihre Teilnehmer-Zugehörigkeit dauerhaft.
+- Wird eine Person später auf **inaktiv** gesetzt, bleibt sie in älteren Planungsrunden erhalten.
+- Alte Runden zeigen diese Person weiterhin in Verfügbarkeit, Einsatzplanung, persönlichem Einsatz und Teilnehmer-Link.
+- Neue Planungsrunden übernehmen nur Personen, die beim Erstellen der Runde aktiv sind.
+- Zusätzlich wird pro Runde ein kleiner Personen-Snapshot gespeichert. Dadurch kann der veröffentlichte Teilnehmer-Link historische Personen weiterhin darstellen, auch wenn der öffentliche Supabase-Aufruf nur aktive Personen liefert.
+- Bestehende Planungsrunden werden beim ersten Admin-Login automatisch auf die neue Rundenlogik ergänzt und gespeichert.
 
-Keine Supabase-Migration erforderlich. Bestehende Daten, Personen und Einteilungen werden nicht verändert.
+## Wichtig
+Keine SQL-/Supabase-Migration erforderlich. Bestehende Personen, Verfügbarkeiten, Einteilungen, Kommentare und Layouts werden nicht verändert.
 
-
-## v1.3.6
-- Nur Hochformat der Teilnehmeransicht angepasst.
-- Fixe Dienstspalte von 145 px auf 125 px verschmälert (normal und vergrössert).
-- Mehr Platz für die Sonntagsspalten; Querformat und Admin-Ansichten unverändert.
+Personen, die nicht mehr mitmachen, künftig **inaktiv setzen statt löschen**.
